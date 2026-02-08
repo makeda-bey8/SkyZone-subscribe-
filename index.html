@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Subscribe – SkyZone</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .card {
+    background: #5E2D91;
+    color: white;
+    padding: 22px;
+    border-radius: 18px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .pixel {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 12px;
+  }
+
+  input[type="email"] {
+    width: 96%;
+    padding: 11px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+  }
+
+  button {
+    width: 96%;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #5E2D91;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+
+  .thanks {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+
+<body>
+
+<div id="mainCard" class="card">
+
+  <svg class="pixel" viewBox="0 0 16 16">
+    <rect width="16" height="16" fill="#ffffff" opacity="0.15"/>
+    <rect x="1" y="1" width="14" height="14" fill="#d79c4e"/>
+    <rect x="4" y="4" width="2" height="2" fill="#3e1f0f"/>
+    <rect x="10" y="5" width="2" height="2" fill="#3e1f0f"/>
+    <rect x="7" y="9" width="2" height="2" fill="#3e1f0f"/>
+    <rect x="11" y="11" width="2" height="2" fill="#3e1f0f"/>
+  </svg>
+
+  <h2>Become eligible for a <br>FREE Insomnia Cookie 🍪</h2>
+
+  <form id="emailForm">
+    <input type="email" id="email" placeholder="your@email.com" required />
+    <input type="hidden" id="planet" value="Skyzar" />
+
+    <div style="text-align:left; margin-top:8px; font-size:12px;">
+      <label>
+        <input type="checkbox" id="consent" required />
+        I agree to receive emails
+      </label>
+      <div style="font-size:10px; opacity:0.8; margin-top:2px;">
+        (You can unsubscribe at any time.)
+      </div>
+    </div>
+
+    <button type="submit">Enter</button>
+  </form>
+
+</div>
+
+<script>
+  // ===== Replace with your deployed Apps Script Web App URL =====
+  const SCRIPT_URL = "YOUR_WEB_APP_URL_HERE";
+
+  async function sendToGoogle(email, planet) {
+    const payload = new URLSearchParams({
+      email: email,
+      planet: planet
+    });
+    return fetch(SCRIPT_URL, { method: "POST", body: payload });
+  }
+
+  const form = document.getElementById('emailForm');
+  const mainCard = document.getElementById('mainCard');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+    const consent = document.getElementById('consent').checked;
+    const planet = document.getElementById('planet').value;
+
+    if (!consent) {
+      alert("Please agree to receive emails to enter 🍪");
+      return;
+    }
+
+    await sendToGoogle(email, planet);
+
+    // Replace the card content
+    mainCard.innerHTML = `
+      <div class="thanks">
+        🎉 <strong>Thank you for subscribing!</strong><br>
+        Welcome to the SkyZone 👽
+      </div>
+    `;
+  });
+</script>
+
+</body>
+</html>
